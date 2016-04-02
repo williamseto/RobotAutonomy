@@ -46,9 +46,13 @@ class DiscreteEnvironment(object):
         # This function maps a configuration in the full configuration space
         # to a grid coordinate in discrete space
         #
+
+        #shift to 0
+        offset_config = numpy.subtract(config, self.lower_limits)
+
         coord = [0] * self.dimension
         for idx in range(self.dimension):
-            coord[idx] = numpy.floor(config[idx] / self.resolution)
+            coord[idx] = numpy.floor(offset_config[idx] / self.resolution)
         return coord
 
     def GridCoordToConfiguration(self, coord):
@@ -60,6 +64,8 @@ class DiscreteEnvironment(object):
         config = [0] * self.dimension
         for idx in range(self.dimension):
             config[idx] = (coord[idx]*self.resolution) + (0.5*self.resolution)
+
+        config = numpy.add(config, self.lower_limits)
         return config
 
     def GridCoordToNodeId(self,coord):

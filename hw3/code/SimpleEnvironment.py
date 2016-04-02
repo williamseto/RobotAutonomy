@@ -10,6 +10,7 @@ class SimpleEnvironment(object):
         self.upper_limits = [5., 5.]
         self.discrete_env = DiscreteEnvironment(resolution, self.lower_limits, self.upper_limits)
 
+
         # add an obstacle
         table = self.robot.GetEnv().ReadKinBodyXMLFile('models/objects/table.kinbody.xml')
         self.robot.GetEnv().Add(table)
@@ -28,46 +29,52 @@ class SimpleEnvironment(object):
         #  up the configuration associated with the particular node_id
         #  and return a list of node_ids that represent the neighboring
         #  nodes
-        config = self.discrete_env.NodeIdToGridCoord(node_id)
-
+        config = self.discrete_env.NodeIdToConfiguration(node_id)
+        resolution = self.discrete_env.resolution
         #doing 4-connected
-        transform_t = np.eye(4)
-
+        transform_t = numpy.eye(4)
+        #print config
+        #print resolution
         #left side
-        left_config = numpy.subtract(config, [0, 1])
-        if left_config[1] > self.lower_limits[1]:
+        left_config = numpy.subtract(config, [resolution, 0])
+        #print self.discrete_env.ConfigurationToNodeId(left_config)
+        if left_config[0] > self.lower_limits[0]:
             transform_t[0][3] = left_config[0]
             transform_t[1][3] = left_config[1]
             self.robot.SetTransform(transform_t)
             if self.robot.GetEnv().CheckCollision(self.robot) is False:
-                successors.append(left_config)
+                successors.append(self.discrete_env.ConfigurationToNodeId(left_config))
+
 
         #right side
-        right_config = numpy.add(config, [0, 1])
-        if right_config[1] < self.upper_limits[1]:
+        right_config = numpy.add(config, [resolution, 0])
+        #print self.discrete_env.ConfigurationToNodeId(right_config)
+        if right_config[0] < self.upper_limits[0]:
             transform_t[0][3] = right_config[0]
             transform_t[1][3] = right_config[1]
             self.robot.SetTransform(transform_t)
             if self.robot.GetEnv().CheckCollision(self.robot) is False:
-                successors.append(right_config)
+                successors.append(self.discrete_env.ConfigurationToNodeId(right_config))
 
         #top side
-        top_config = numpy.subtract(config, [1, 0])
-        if top_config[1] > self.lower_limits[0]:
+        top_config = numpy.subtract(config, [0, resolution])
+        #print self.discrete_env.ConfigurationToNodeId(top_config)
+        if top_config[1] > self.lower_limits[1]:
             transform_t[0][3] = top_config[0]
             transform_t[1][3] = top_config[1]
             self.robot.SetTransform(transform_t)
             if self.robot.GetEnv().CheckCollision(self.robot) is False:
-                successors.append(top_config)
+                successors.append(self.discrete_env.ConfigurationToNodeId(top_config))
 
         #bottom side
-        bottom_config = numpy.add(config, [1, 0])
-        if bottom_config[1] < self.upper_limits[0]:
+        bottom_config = numpy.add(config, [0, resolution])
+        #print self.discrete_env.ConfigurationToNodeId(bottom_config)
+        if bottom_config[1] < self.upper_limits[1]:
             transform_t[0][3] = bottom_config[0]
             transform_t[1][3] = bottom_config[1]
             self.robot.SetTransform(transform_t)
             if self.robot.GetEnv().CheckCollision(self.robot) is False:
-                successors.append(bottom_config)
+                successors.append(self.discrete_env.ConfigurationToNodeId(bottom_config))
 
         return successors
 

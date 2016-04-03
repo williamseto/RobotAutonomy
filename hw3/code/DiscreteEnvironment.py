@@ -81,7 +81,7 @@ class DiscreteEnvironment(object):
             for dim in range(idx):
                 stride = stride * self.num_cells[dim]
             node_id = node_id + (coord[idx] * stride)
-        return node_id
+        return int(node_id)
 
     def NodeIdToGridCoord(self, node_id):
         

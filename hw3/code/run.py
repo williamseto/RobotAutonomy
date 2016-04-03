@@ -23,6 +23,17 @@ def main(robot, planning_env, planner):
         goal_config = numpy.array([3.0, 0.0])
 
     plan = planner.Plan(start_config, goal_config)
+    print plan
+    
+    planning_env.InitializePlot(goal_config)
+    if robot.name != 'herb':
+        #Visualize
+        old_vertex = plan[0]
+        for idx in range (1,len(plan)):
+            new_vertex = plan[idx]
+            planning_env.PlotEdge(old_vertex,new_vertex)
+            old_vertex = new_vertex       
+    
     traj = robot.ConvertPlanToTrajectory(plan)
 
     raw_input('Press any key to execute trajectory')

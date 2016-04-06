@@ -17,14 +17,17 @@ def main(robot, planning_env, planner):
     raw_input('Press any key to begin planning')
 
     start_config = numpy.array(robot.GetCurrentConfiguration())
+
     if robot.name == 'herb':
-        goal_config = numpy.array([ 4.6, -1.76, 0.00, 1.96, -1.15, 0.87, -1.43] )
+        #goal_config = numpy.array([ 4.6, -1.76, 0.00, 1.96, -1.15, 0.87, -1.43] )
+        goal_config = numpy.array([ 3.68, -1.90,  0.00,  2.20,  0.00,  0.00,  0.00 ])
     else:
         goal_config = numpy.array([3.0, 0.0])
 
     plan = planner.Plan(start_config, goal_config)
-    print plan
+    #print plan
     
+    '''
     planning_env.InitializePlot(goal_config)
     if robot.name != 'herb':
         #Visualize
@@ -33,7 +36,7 @@ def main(robot, planning_env, planner):
             new_vertex = plan[idx]
             planning_env.PlotEdge(old_vertex,new_vertex)
             old_vertex = new_vertex       
-    
+    '''
     traj = robot.ConvertPlanToTrajectory(plan)
 
     raw_input('Press any key to execute trajectory')

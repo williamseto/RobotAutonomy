@@ -1,5 +1,6 @@
 import numpy
 from DiscreteEnvironment import DiscreteEnvironment
+import random
 
 class HerbEnvironment(object):
     
@@ -95,3 +96,57 @@ class HerbEnvironment(object):
         
         return self.ComputeDistance(start_id, goal_id)
 
+    def GenerateRandomConfiguration(self):
+        config = [0] * len(self.robot.GetActiveDOFIndices())
+        #
+        # TODO: Generate and return a random configuration
+        #
+        lower_limits, upper_limits = self.robot.GetActiveDOFLimits()
+        while True:
+            config = [random.uniform(lower_limits[i], upper_limits[i]) for i in range(0, len(lower_limits))]
+            if self.collision_check(config):
+                pass
+            else:
+                break
+        return numpy.array(config)
+
+    def ComputeConfigDistance(self, start_config, end_config):
+        return numpy.linalg.norm(end_config - start_config)
+
+    def Extend(self, start_config, end_config):
+        
+        #
+        # TODO: Implement a function which attempts to extend from 
+        #   a start configuration to a goal configuration
+        #
+
+        steps = self.ComputeConfigDistance(start_config, end_config)*10
+        config_temp = [numpy.linspace(start_config[i], end_config[i], steps) for i in range(0, len(self.robot.GetActiveDOFIndices()))]
+        config_temp = numpy.array(zip(*config_temp))
+        config = None
+        for i in range(0, len(config_temp)):
+            if self.collision_check(config_temp[i]):
+                return numpy.array(config_temp[i-1])
+            else:
+                config = numpy.array(config_temp[i])
+        return config
+        
+    def ShortenPath(self, path, timeout=5.0):
+        # 
+        # TODO: Implement a function which performs path shortening
+        #  on the given path.  Terminate the shortening after the 
+        #  given timout (in seconds).
+        #
+        
+        #make copy so we don't overwrite the original path
+        short_path = list(path)
+
+        init_time = time.time()
+        while time.time() - init_time < timeout:
+            start = random.randint(0, len(short_path)-3)
+            end = random.randint(start+1, len(short_path)-1)
+            extend = self.Extend(short_path[start], short_path[end])
+            if compare(extend, short_path[end]):
+                short_path[start+1:end] = []
+
+        return short_path

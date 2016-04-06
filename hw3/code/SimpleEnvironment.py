@@ -1,6 +1,7 @@
 import numpy
 import pylab as pl
 from DiscreteEnvironment import DiscreteEnvironment
+import random
 
 class SimpleEnvironment(object):
     
@@ -135,4 +136,63 @@ class SimpleEnvironment(object):
                 'k.-', linewidth=2.5)
         pl.draw()
 
-        
+       
+    def collision_check(self, x, y):
+        transform_t = numpy.eye(4)
+        transform_t[0][3] = x
+        transform_t[1][3] = y
+        self.robot.SetTransform(transform_t)
+        return self.robot.GetEnv().CheckCollision(self.robot) 
+    def GenerateRandomConfiguration(self):
+        #
+        # TODO: Generate and return a random configuration
+        #
+        while True:
+            x = random.uniform(self.lower_limits[0], self.upper_limits[0])
+            y = random.uniform(self.lower_limits[1], self.upper_limits[1])
+            if self.collision_check(x, y):
+                pass
+            else:
+                config = [x, y]
+                break
+        return numpy.array(config)
+
+    def ComputeConfigDistance(self, start_config, end_config):
+        return numpy.linalg.norm(end_config - start_config)
+
+    def Extend(self, start_config, end_config):
+        #
+        # TODO: Implement a function which attempts to extend from 
+        #   a start configuration to a goal configuration
+        #
+        steps = self.ComputeConfigDistance(start_config, end_config)*25
+        x = numpy.linspace(start_config[0], end_config[0], steps)
+        y = numpy.linspace(start_config[1], end_config[1], steps)
+        config = None
+        for i in range(0, len(x)):
+            if self.collision_check(x[i], y[i]) and i>0:
+                #print "collision"
+                return numpy.array([x[i-1], y[i-1]])
+            else:
+                config = numpy.array([x[i], y[i]])
+        return config
+
+    def ShortenPath(self, path, timeout=5.0):
+        # 
+        # TODO: Implement a function which performs path shortening
+        #  on the given path.  Terminate the shortening after the 
+        #  given timout (in seconds).
+        #
+
+        #make copy so we don't overwrite the original path
+        short_path = list(path)
+
+        init_time = time.time()
+        while time.time() - init_time < timeout:
+            start = random.randint(0, len(short_path)-3)
+            end = random.randint(start+1, len(short_path)-1)
+            extend = self.Extend(short_path[start], short_path[end])
+            if compare(extend, short_path[end]):
+                short_path[start+1:end] = []
+
+        return short_path

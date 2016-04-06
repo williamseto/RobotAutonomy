@@ -101,7 +101,7 @@ class SimpleEnvironment(object):
         # computes the heuristic cost between the configurations
         # given by the two node ids
 
-        return cost
+        return self.ComputeDistance(start_id, goal_id)
 
     def InitializePlot(self, goal_config):
         self.fig = pl.figure()

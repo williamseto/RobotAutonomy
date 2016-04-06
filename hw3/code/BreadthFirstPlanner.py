@@ -25,15 +25,16 @@ class BreadthFirstPlanner(object):
         for idx in range(self.planning_env.discrete_env.dimension):
             total_nodes = total_nodes * self.planning_env.discrete_env.num_cells[idx]
 
-        visited = [0] * total_nodes
-        parents = [0] * total_nodes
+        visited = {}
+        parents = {}
 
         while (q.empty() is False):
             node_id = q.get()
             succ_node_id = self.planning_env.GetSuccessors(node_id)
             
+
             for idx in succ_node_id:
-                if (visited[idx] is 0):
+                if idx not in visited:
                     visited[idx] = 1
                     parents[idx] = node_id
                     q.put(idx)

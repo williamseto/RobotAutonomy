@@ -26,20 +26,27 @@ class DepthFirstPlanner(object):
         for idx in range(self.planning_env.discrete_env.dimension):
             total_nodes = total_nodes * self.planning_env.discrete_env.num_cells[idx]
 
-        visited = [0] * total_nodes
-        parents = [0] * total_nodes
-
+        visited = {}
+        parents = {}
+        print len(visited)
         while q:
             node_id = q.pop()
             succ_node_id = self.planning_env.GetSuccessors(node_id)
-            print succ_node_id
-            for idx in succ_node_id:
-                if (visited[idx] is 0):
-                    visited[idx] = 1
-                    parents[idx] = node_id
-                    q.append(idx)
-                if (idx == goal_node_id):
-                    break
+            #print succ_node_id
+            if node_id not in visited:
+                visited[node_id] = 1
+                for idx in succ_node_id:
+                    '''
+                    if (visited[idx] is 0):
+                        visited[idx] = 1
+                        parents[idx] = node_id
+                        q.append(idx)
+                    '''
+                    if idx not in visited:
+                        parents[idx] = node_id
+                        q.append(idx)
+                    if (idx == goal_node_id):
+                        break
             if (idx == goal_node_id):
                     break
 

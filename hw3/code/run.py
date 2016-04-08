@@ -25,7 +25,12 @@ def main(robot, planning_env, planner):
         goal_config = numpy.array([3.0, 0.0])
 
     plan_start_time=time.time()
+
+    #use this for hrrt
     plan = planner.Plan(start_config, goal_config)
+
+    #use this for rrt
+    #plan = planner.PlanOriginal(start_config, goal_config)
 
     print ('plan time', (time.time() - plan_start_time))
     print ('path length', len(plan))

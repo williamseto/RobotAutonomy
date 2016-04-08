@@ -16,6 +16,11 @@ class RRTTree(object):
         
         dists = []
         for v in self.vertices:
+
+            #use this for rrt
+            #dists.append(self.planning_env.ComputeConfigDistance(config, v[0]))
+
+            #use this for hrrt
             dists.append(self.planning_env.ComputeConfigDistance(config, v[0][0]))
 
         vid, vdist = min(enumerate(dists), key=operator.itemgetter(1))

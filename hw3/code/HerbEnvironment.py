@@ -109,7 +109,7 @@ class HerbEnvironment(object):
 
         #cost = 5*numpy.linalg.norm(goal_config-start_config)
         #cost = sum(numpy.absolute(numpy.subtract(start_coord, goal_coord)))
-        cost = numpy.linalg.norm(numpy.subtract(goal_coord,start_coord))
+        cost = 10*numpy.linalg.norm(numpy.subtract(goal_coord,start_coord))
         return cost
 
     def GenerateRandomConfiguration(self):

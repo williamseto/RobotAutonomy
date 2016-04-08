@@ -28,8 +28,10 @@ class BreadthFirstPlanner(object):
         visited = {}
         parents = {}
 
+        count = 0
         while (q.empty() is False):
             node_id = q.get()
+            count = count + 1
             succ_node_id = self.planning_env.GetSuccessors(node_id)
             
 
@@ -50,5 +52,7 @@ class BreadthFirstPlanner(object):
         plan.append(numpy.array(start_config))
 
         plan = numpy.array(plan)
+
+        print('Number of nodes:',count)
 
         return plan[::-1]

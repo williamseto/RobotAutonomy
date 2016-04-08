@@ -29,8 +29,10 @@ class DepthFirstPlanner(object):
         visited = {}
         parents = {}
         print len(visited)
+        count = 0
         while q:
             node_id = q.pop()
+            count = count + 1
             succ_node_id = self.planning_env.GetSuccessors(node_id)
             #print succ_node_id
             if node_id not in visited:
@@ -57,6 +59,8 @@ class DepthFirstPlanner(object):
         plan.append(numpy.array(start_config))
 
         plan = numpy.array(plan)
+
+        print('Number of nodes:',count)
 
         return plan[::-1]
 

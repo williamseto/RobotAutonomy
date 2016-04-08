@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import time
 
 import argparse, numpy, openravepy, time
 
@@ -23,10 +24,14 @@ def main(robot, planning_env, planner):
     else:
         goal_config = numpy.array([3.0, 0.0])
 
+    plan_start_time=time.time()
     plan = planner.Plan(start_config, goal_config)
+    print ('plan time', (time.time() - plan_start_time))
+    print ('path length', len(plan))
+
     #print plan
-    
-    '''
+
+
     planning_env.InitializePlot(goal_config)
     if robot.name != 'herb':
         #Visualize
@@ -35,7 +40,7 @@ def main(robot, planning_env, planner):
             new_vertex = plan[idx]
             planning_env.PlotEdge(old_vertex,new_vertex)
             old_vertex = new_vertex       
-    '''
+
     traj = robot.ConvertPlanToTrajectory(plan)
 
     raw_input('Press any key to execute trajectory')

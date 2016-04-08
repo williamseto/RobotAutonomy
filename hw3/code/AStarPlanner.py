@@ -31,8 +31,10 @@ class AStarPlanner(object):
         visited = {}
         parents = {}
 
+        count = 0
         while (q.empty() is False):
             tup = q.get()
+            count = count + 1
             g_val = tup[1]
             node_id = tup[2]
 
@@ -63,6 +65,8 @@ class AStarPlanner(object):
         plan.append(numpy.array(start_config))
 
         plan = numpy.array(plan)
+
+        print('Number of nodes:',count)
 
         return plan[::-1]
 

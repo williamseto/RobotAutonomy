@@ -36,8 +36,10 @@ class AStarPlanner(object):
             g_val = tup[1]
             node_id = tup[2]
 
+            #print self.planning_env.discrete_env.NodeIdToConfiguration(node_id)
+
             succ_node_id = self.planning_env.GetSuccessors(node_id)
- 
+            
 
             for idx in succ_node_id:
                 if idx not in visited:

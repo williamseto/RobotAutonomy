@@ -56,13 +56,13 @@ class HerbEnvironment(object):
         for dim in range(len(self.robot.GetActiveDOFIndices())):
             #make copy of original config
             pos_config = list(config)
-            pos_config[dim] = pos_config[dim] + 2*resolution
+            pos_config[dim] = pos_config[dim] + resolution
             if pos_config[dim] < self.upper_limits[dim]:
                 if self.collision_check(pos_config) is False:
                     successors.append(self.discrete_env.ConfigurationToNodeId(pos_config))
 
             neg_config = list(config)
-            neg_config[dim] = neg_config[dim] - 2*resolution
+            neg_config[dim] = neg_config[dim] - resolution
             if neg_config[dim] > self.lower_limits[dim]:
                 if self.collision_check(neg_config) is False:
                     successors.append(self.discrete_env.ConfigurationToNodeId(neg_config))
@@ -94,7 +94,20 @@ class HerbEnvironment(object):
         # computes the heuristic cost between the configurations
         # given by the two node ids
         
-        return self.ComputeDistance(start_id, goal_id)
+        #return self.ComputeDistance(start_id, goal_id)
+
+
+        start_config = self.discrete_env.NodeIdToConfiguration(start_id)
+        goal_config = self.discrete_env.NodeIdToConfiguration(goal_id)
+
+        start_coord = self.discrete_env.NodeIdToGridCoord(start_id)
+        goal_coord = self.discrete_env.NodeIdToGridCoord(goal_id)
+
+        #cost = 1000*numpy.linalg.norm(goal_config-start_config)
+        #cost = sum(numpy.subtract(start_coord, goal_coord))
+        cost = 100*numpy.linalg.norm(numpy.subtract(goal_coord,start_coord))
+        
+        return cost
 
     def GenerateRandomConfiguration(self):
         config = [0] * len(self.robot.GetActiveDOFIndices())

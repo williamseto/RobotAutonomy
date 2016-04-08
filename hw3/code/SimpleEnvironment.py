@@ -2,6 +2,10 @@ import numpy
 import pylab as pl
 from DiscreteEnvironment import DiscreteEnvironment
 import random
+import time
+
+import collections
+compare = lambda x, y: collections.Counter(x) == collections.Counter(y)
 
 class SimpleEnvironment(object):
     

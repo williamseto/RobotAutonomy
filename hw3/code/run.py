@@ -26,12 +26,13 @@ def main(robot, planning_env, planner):
 
     plan_start_time=time.time()
     plan = planner.Plan(start_config, goal_config)
+
     print ('plan time', (time.time() - plan_start_time))
     print ('path length', len(plan))
 
     #print plan
 
-
+    '''
     planning_env.InitializePlot(goal_config)
     if robot.name != 'herb':
         #Visualize
@@ -39,9 +40,11 @@ def main(robot, planning_env, planner):
         for idx in range (1,len(plan)):
             new_vertex = plan[idx]
             planning_env.PlotEdge(old_vertex,new_vertex)
-            old_vertex = new_vertex       
-
+            old_vertex = new_vertex
+    '''
+    short_path = planning_env.ShortenPath(plan)
     traj = robot.ConvertPlanToTrajectory(plan)
+
 
     raw_input('Press any key to execute trajectory')
     robot.ExecuteTrajectory(traj)

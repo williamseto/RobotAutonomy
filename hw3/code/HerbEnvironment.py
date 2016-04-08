@@ -2,6 +2,9 @@ import numpy
 from DiscreteEnvironment import DiscreteEnvironment
 import random
 
+import collections
+compare = lambda x, y: collections.Counter(x) == collections.Counter(y)
+
 class HerbEnvironment(object):
     
     def __init__(self, herb, resolution):

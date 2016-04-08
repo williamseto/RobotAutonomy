@@ -1,6 +1,7 @@
 import numpy
 from DiscreteEnvironment import DiscreteEnvironment
 import random
+import time
 
 import collections
 compare = lambda x, y: collections.Counter(x) == collections.Counter(y)
@@ -106,10 +107,9 @@ class HerbEnvironment(object):
         start_coord = self.discrete_env.NodeIdToGridCoord(start_id)
         goal_coord = self.discrete_env.NodeIdToGridCoord(goal_id)
 
-        #cost = 1000*numpy.linalg.norm(goal_config-start_config)
-        #cost = sum(numpy.subtract(start_coord, goal_coord))
-        cost = 100*numpy.linalg.norm(numpy.subtract(goal_coord,start_coord))
-        
+        #cost = 5*numpy.linalg.norm(goal_config-start_config)
+        #cost = sum(numpy.absolute(numpy.subtract(start_coord, goal_coord)))
+        cost = numpy.linalg.norm(numpy.subtract(goal_coord,start_coord))
         return cost
 
     def GenerateRandomConfiguration(self):
@@ -136,15 +136,21 @@ class HerbEnvironment(object):
         #   a start configuration to a goal configuration
         #
 
-        steps = self.ComputeConfigDistance(start_config, end_config)*10
+        steps = self.ComputeConfigDistance(start_config, end_config)*20
+
         config_temp = [numpy.linspace(start_config[i], end_config[i], steps) for i in range(0, len(self.robot.GetActiveDOFIndices()))]
         config_temp = numpy.array(zip(*config_temp))
         config = None
         for i in range(0, len(config_temp)):
             if self.collision_check(config_temp[i]):
-                return numpy.array(config_temp[i-1])
+                if i is 0:
+                    return None
+                else:
+                    return numpy.array(config_temp[i-1])
             else:
                 config = numpy.array(config_temp[i])
+                #print self.ComputeConfigDistance(start_config, config)
+
         return config
         
     def ShortenPath(self, path, timeout=5.0):

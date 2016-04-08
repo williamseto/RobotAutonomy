@@ -32,23 +32,30 @@ def main(robot, planning_env, planner):
 
     #print plan
 
-    '''
-    planning_env.InitializePlot(goal_config)
-    if robot.name != 'herb':
-        #Visualize
-        old_vertex = plan[0]
-        for idx in range (1,len(plan)):
-            new_vertex = plan[idx]
-            planning_env.PlotEdge(old_vertex,new_vertex)
-            old_vertex = new_vertex
-    '''
+    if planner.visualize:
+        planning_env.InitializePlot(goal_config)
+        if robot.name != 'herb':
+            #Visualize
+            old_vertex = plan[0]
+            for idx in range (1,len(plan)):
+                new_vertex = plan[idx]
+                planning_env.PlotEdge(old_vertex,new_vertex)
+                old_vertex = new_vertex
+
     short_path = planning_env.ShortenPath(plan)
+
+    rrt_dist = 0
+    for i in range(len(short_path)-1):
+        rrt_dist = rrt_dist + planning_env.ComputeConfigDistance(short_path[i], short_path[i+1])
+    print('rrtdist', rrt_dist)
     traj = robot.ConvertPlanToTrajectory(plan)
 
-    #plot shortened path
-    planning_env.InitializePlot(goal_config)
-    for i in range(0, len(short_path)-1):
-        planning_env.PlotEdge(short_path[i], short_path[i+1])
+    if planner.visualize:
+        #plot shortened path
+        planning_env.InitializePlot(goal_config)
+        for i in range(0, len(short_path)-1):
+            planning_env.PlotEdge(short_path[i], short_path[i+1])
+
 
     raw_input('Press any key to execute trajectory')
     robot.ExecuteTrajectory(traj)

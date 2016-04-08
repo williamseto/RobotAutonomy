@@ -90,7 +90,6 @@ class HeuristicRRTPlanner(object):
         return plan
 
     def PlanOriginal(self, start_config, goal_config, epsilon = 0.001):
->>>>>>> 19aee7e... update hrrt
         tree = RRTTree(self.planning_env, start_config)
         if self.visualize and hasattr(self.planning_env, 'InitializePlot'):
             self.planning_env.InitializePlot(goal_config)

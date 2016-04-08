@@ -94,7 +94,7 @@ class SimpleEnvironment(object):
         start_config = self.discrete_env.NodeIdToGridCoord(start_id)
         end_config = self.discrete_env.NodeIdToGridCoord(end_id)
 
-        dist = sum(numpy.subtract(start_config, end_config))
+        dist = sum(numpy.absolute(numpy.subtract(start_config, end_config)))
 
         return dist
 

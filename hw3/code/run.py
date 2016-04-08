@@ -45,6 +45,10 @@ def main(robot, planning_env, planner):
     short_path = planning_env.ShortenPath(plan)
     traj = robot.ConvertPlanToTrajectory(plan)
 
+    #plot shortened path
+    planning_env.InitializePlot(goal_config)
+    for i in range(0, len(short_path)-1):
+        planning_env.PlotEdge(short_path[i], short_path[i+1])
 
     raw_input('Press any key to execute trajectory')
     robot.ExecuteTrajectory(traj)

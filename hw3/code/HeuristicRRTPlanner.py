@@ -8,7 +8,7 @@ class HeuristicRRTPlanner(object):
         self.planning_env = planning_env
         self.visualize = visualize
 
-    def Plan(self, start_config, goal_config, epsilon = 0.001):
+    def Plan(self, start_config, goal_config, epsilon = 0.1):
         tree = RRTTree(self.planning_env, start_config)
         if self.visualize and hasattr(self.planning_env, 'InitializePlot'):
             self.planning_env.InitializePlot(goal_config)
@@ -16,7 +16,7 @@ class HeuristicRRTPlanner(object):
         #  The return path should be an array
         #  of dimension k x n where k is the number of waypoints
         #  and n is the dimension of the robots configuration space
-        prob_goal = 0.2
+        prob_goal = 0.4
         dist = self.planning_env.ComputeConfigDistance(goal_config, start_config)
         while dist > epsilon:
             if random() < prob_goal:
